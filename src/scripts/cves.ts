@@ -1,4 +1,4 @@
-import { makeRandomInt } from "./utils.ts";
+import {LEVELS, makeRandomInt} from "./utils.ts";
 
 const eyesBlink = `
   <div class="eye blink"></div>
@@ -37,21 +37,21 @@ const makeEyes = () => {
 };
 
 const makeLevel = (levels: string[]) => {
-  const fullLevels = [...levels, "ok", "ok", "ok", "ok", "ok"];
+  const fullLevels = [...levels, "ok", "ok", "ok"];
   const rand = makeRandomInt(0, fullLevels.length - 1);
   return fullLevels[rand];
 };
 
 const checkAccepted = () => {
-  const arr = [0, 0, 0, 0, 1];
+  const arr = [0, 0, 1];
   const rand = makeRandomInt(0, arr.length - 1);
   return Boolean(arr[rand]);
 };
 
 export default (state: Record<string, any>) => {
   const stage = document.createElement("div");
-  const level = makeLevel(state.cves);
-  const isAccepted = level !== "ok" ? checkAccepted() : false;
+  const level = makeLevel(Object.keys(LEVELS));
+  const isAccepted = level !== "ok" && state.cves.includes(level) ? checkAccepted() : false;
 
   stage.className = `stage ${level} ${isAccepted ? "accepted fuck" : ""}`;
   stage.innerHTML = `

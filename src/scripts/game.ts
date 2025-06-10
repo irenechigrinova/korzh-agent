@@ -89,9 +89,11 @@ export default (state: Record<string, any>) => {
           document.querySelector(".bat-wrapper")?.classList.add("active");
         }
         const cves = document.querySelectorAll(".stage");
+        const batPosition = document.querySelector('.bat-wrapper')?.getBoundingClientRect().left ?? 0;
         cves.forEach((cve) => {
           const left = cve.getBoundingClientRect().left;
-          if (left > 420 && left < 500) {
+          const diff = batPosition - left;
+          if (diff < 0 && diff > -70) {
             document.querySelector(".bat-wrapper")?.classList.add("active");
             if (
               !cve.classList.contains("accepted") &&

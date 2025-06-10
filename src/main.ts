@@ -28,7 +28,6 @@ const initialState: Record<string, any> = {
 
 const state = new Proxy(initialState, {
   set(obj, prop, value) {
-    console.log(prop, value);
     if (prop === "screen" && value === "form") {
       form(state);
     }
@@ -36,7 +35,6 @@ const state = new Proxy(initialState, {
       game(state);
     }
     if (prop === "screen" && value === "box") {
-      console.log("qqq");
       box(state);
     }
     if (prop === "screen" && value === "fail") {
