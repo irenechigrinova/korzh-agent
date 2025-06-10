@@ -1,0 +1,129 @@
+@import "styles/start";
+@import "styles/form";
+@import "styles/cve";
+@import "styles/box";
+@import "styles/game";
+@import "styles/conveyor";
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Neucha", cursive;
+  font-weight: 400;
+  font-style: normal;
+  overflow: hidden;
+}
+
+body:not(.body-loading) {
+  background-image: url("bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+main {
+  width: 100vw;
+  height: 100vh;
+}
+
+section {
+  width: 1000px;
+  height: 700px;
+  position: absolute;
+  top: calc((100vh - 700px) / 2);
+  left: calc((100vw - 1000px) / 2);
+}
+
+.levels, .settings {
+  display: flex;
+  gap: 8px;
+
+  .level {
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 20px;
+
+    i {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.pause-all *:not(.dark):not(.dark img):not(.dark p) {
+  animation-play-state: paused !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@keyframes shadow-dance {
+  0%, 100% {
+    text-shadow: 5px 5px 0 #f82587, 10px 10px 0 #00d4ff;
+  }
+  50% {
+    text-shadow: -5px -5px 0 #f82587, -10px -10px 0 #00d4ff;
+  }
+}
+
+.dark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 10;
+  animation: fade-in 2s steps(5, end) forwards;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-size: 40px;
+
+  img {
+    width: 400px;
+    opacity: 0;
+    animation: showImg 0.5s ease-in-out forwards;
+  }
+
+  p {
+    position: relative;
+    top: -80px;
+    opacity: 0;
+    animation: showImg 0.5s ease-in-out forwards;
+  }
+
+  button {
+    background-color: #f82587;
+    outline: none;
+    border: none;
+    padding: 24px;
+    cursor: pointer;
+    font-size: 30px;
+    color: #ffffff;
+    border-radius: 8px;
+    margin-top: -80px;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+@keyframes showImg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

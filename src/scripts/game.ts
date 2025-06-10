@@ -1,0 +1,149 @@
+import { gsap } from "gsap";
+import { makeRandomInt, renderLevel } from "./utils.ts";
+
+import makeCve from "./cves.ts";
+
+const content = `
+  <div class="character">
+    <div class="korzh"></div>
+    <div class="bat-wrapper">
+      <img src="bat.png" alt="Bat" />
+    </div>
+    <div class="bonk">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 25.795 407.71 294.784">
+        <path class="shadow" style="stroke: rgb(0, 0, 0); stroke-width: 11px; fill: color(a98-rgb 0.934 0.736 0.187); stroke-opacity: 0.19;" d="M 74.52 46.718 L 112.353 98.309 C 112.353 111.276 155.345 46.847 155.345 36.973 C 144.951 59.84 167.629 107.283 171.969 97.736 C 180.265 104.847 234.122 34.726 232.731 33.534 C 230.842 34.049 204.602 107.075 217.827 103.468 C 220.231 115.49 308.741 57.034 308.398 55.317 C 305.565 55.059 240.147 130.406 252.795 131.556 C 249.111 143.835 348.121 139.205 348.524 137.862 C 347.322 135.629 244.952 157.773 253.368 173.402 C 240.378 184.03 395.559 228.565 397.822 226.713 C 397.595 225.349 243.223 199.094 247.062 222.127 C 237.863 225.577 275.956 264.745 278.017 263.972 C 278.42 263.166 219.981 229.858 214.961 239.897 C 202.768 238.678 212.924 302.806 214.388 302.952 C 215.194 302.045 190.033 237.774 179.994 249.068 C 164.365 241.855 123.878 308.801 126.111 309.831 C 127.178 309.618 149.397 241.774 130.123 245.629 L 15.477 273.144 C 18.337 274.733 128.414 223.342 106.621 211.235 C 116.582 210.205 86.354 171.921 16.624 179.134 C 18.32 181.557 100.976 155.183 92.863 143.594 C 100.425 138.868 56.66 113.269 52.164 116.079 C 54.21 119.034 101.655 122.089 91.144 106.907 C 97.24 106.907 75.252 46.718 74.52 46.718 Z"/>
+        <path class="bubble" style="stroke: rgb(0, 0, 0); stroke-width: 11; fill: color(a98-rgb 0.934 0.736 0.187);" d="M 77.165 50.814 L 114.998 102.405 C 114.998 115.372 157.99 50.943 157.99 41.069 C 147.596 63.936 170.274 111.379 174.614 101.832 C 182.91 108.943 236.767 38.822 235.376 37.63 C 233.487 38.145 207.247 111.171 220.472 107.564 C 222.876 119.586 311.386 61.13 311.043 59.413 C 308.21 59.155 242.792 134.502 255.44 135.652 C 251.756 147.931 350.766 143.301 351.169 141.958 C 349.967 139.725 247.597 161.869 256.013 177.498 C 243.023 188.126 398.204 232.661 400.467 230.809 C 400.24 229.445 245.868 203.19 249.707 226.223 C 240.508 229.673 278.601 268.841 280.662 268.068 C 281.065 267.262 222.626 233.954 217.606 243.993 C 205.413 242.774 215.569 306.902 217.033 307.048 C 217.839 306.141 192.678 241.87 182.639 253.164 C 167.01 245.951 126.523 312.897 128.756 313.927 C 129.823 313.714 152.042 245.87 132.768 249.725 L 18.122 277.24 C 20.982 278.829 120.168 224.572 98.375 212.465 C 108.336 211.435 88.999 176.017 19.269 183.23 C 20.965 185.653 103.621 159.279 95.508 147.69 C 103.07 142.964 59.305 117.365 54.809 120.175 C 95.634 142.022 97.311 60.272 77.165 50.814"/>
+      </svg>
+      <span>BONK!</span>
+    </div>
+  </div>
+  <div class="conveyor">
+    <div class="progress-wrapper">
+        <div class='progress-funky'>
+            <div class='current'></div>
+        </div>
+    </div>
+</div>
+`;
+
+export default (state: Record<string, any>) => {
+  const gameTL = gsap.timeline();
+  let isBonking = false;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "game-wrapper";
+  document.body.appendChild(wrapper);
+
+  const section = document.createElement("section");
+  section.className = "game";
+  wrapper.appendChild(section);
+  section.innerHTML = content;
+
+  const settings = document.createElement("div");
+  settings.className = "settings";
+  settings.innerHTML = `
+    <div>Итого: <span class="score">0</span></div>
+    <div>Таргет: </div>
+    ${state.cves.map((level: string) => renderLevel(level as string)).join("")}
+  `;
+
+  section.appendChild(settings);
+
+  const manageCve = () => {
+    makeCve(state);
+
+    const rand = makeRandomInt(1000, 3000);
+    if (!document.body.classList.contains("pause-all")) {
+      setTimeout(manageCve, rand);
+    }
+  };
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (
+        (mutation.target as HTMLElement).tagName === "BODY" &&
+        !(mutation.target as HTMLBodyElement).classList.contains("pause-all")
+      ) {
+        document.querySelectorAll(".stage").forEach((item) => item.remove());
+        manageCve();
+      }
+    });
+  });
+
+  observer.observe(document.querySelector("body")!, {
+    attributes: true,
+    childList: false,
+  });
+
+  const handleBonk = (e?: MouseEvent | KeyboardEvent) => {
+    if (isBonking) return;
+    if (document.body.classList.contains("pause-all")) return;
+
+    isBonking = true;
+
+    gameTL.to(".bat-wrapper img", {
+      transform: "rotate(45deg)",
+      duration: 0.2,
+      onComplete: () => {
+        if (!e) {
+          document.querySelector(".bat-wrapper")?.classList.add("active");
+        }
+        const cves = document.querySelectorAll(".stage");
+        cves.forEach((cve) => {
+          const left = cve.getBoundingClientRect().left;
+          if (left > 420 && left < 500) {
+            document.querySelector(".bat-wrapper")?.classList.add("active");
+            if (
+              !cve.classList.contains("accepted") &&
+              state.cves.includes(cve.className.split(" ")[1])
+            ) {
+              cve.classList.add("bonked");
+              state.score += 1;
+            } else {
+              state.screen = "fail";
+            }
+          }
+        });
+      },
+    });
+
+    setTimeout(() => {
+      document.querySelector(".bat-wrapper")?.classList.remove("active");
+      gameTL.to(".bat-wrapper img", {
+        transform: "rotate(15deg)",
+        duration: 0.2,
+      });
+      isBonking = false;
+    }, 300);
+  };
+
+  setTimeout(() => {
+    document.querySelector(".game")?.classList.add("active");
+  }, 200);
+
+  setTimeout(() => {
+    gameTL.to(".box-section", {
+      opacity: 0,
+      duration: 0.5,
+      onComplete: () => {
+        document.querySelector(".box-section")?.remove();
+        gameTL.to(".korzh", { opacity: 1, duration: 0.2 });
+        gameTL.to(".conveyor", {
+          width: 1000,
+          duration: 0.8,
+          left: -44,
+          delay: 0.5,
+        });
+
+        setTimeout(() => {
+          handleBonk();
+        }, 2000);
+
+        setTimeout(manageCve, 2600);
+      },
+    });
+  }, 1100);
+
+  document.addEventListener("click", handleBonk);
+  document.addEventListener("keydown", handleBonk);
+};

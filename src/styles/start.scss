@@ -1,0 +1,99 @@
+.start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  font-size: 150px;
+
+  transform: rotate(-360deg) scale(0);
+
+  animation-name: entrance, alarm;
+  animation-duration: 1.4s, 5s;
+  animation-fill-mode: forwards, none;
+  animation-iteration-count: 1, infinite;
+  animation-delay: 0s, 2s;
+}
+
+.start span {
+  display: block;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  left: -80px;
+
+  text-shadow: 5px 5px 0 #f82587, 10px 10px 0 #00d4ff;
+  animation: shadow-dance 2s infinite;
+}
+
+.start:not(.paused) span {
+  cursor: pointer;
+}
+
+.start svg {
+  width: 100%;
+  position: absolute;
+  z-index: 0;
+  transform-origin: 50% 50%;
+}
+
+.start:not(.paused) svg .bubble {
+  cursor: pointer;
+  transform-origin: 50% 50%;
+}
+
+.loading {
+  width: fit-content;
+  padding: 24px;
+  font-size: 40px;
+  font-family: system-ui,sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #0000;
+  -webkit-text-stroke: 1px #000;
+  background: conic-gradient(#000 0 0) text;
+  animation: l8 2s linear infinite;
+}
+
+.loading:before {
+  content: "Загружаем Korzh Agent";
+}
+
+@keyframes l8 {
+  0%,2%,8%,11%,15%,21%,30%,32%,35%,40%,46%,47%,53%,61%,70%,72%,77%,80%,86%   {background-size: 0    0   }
+  1%,9%,10%,16%,20%,31%,34%,41%,45%,48%,52%,55%,60%,73%,76%,81%,85%,96%,100% {background-size: 100% 100%}
+}
+
+@keyframes entrance {
+  0% {
+    transform: rotate(-360deg) scale(0);
+  }
+  10% {
+    transform: rotate(-360deg) scale(0);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes alarm {
+  0% {
+    transform: rotate(-20deg);
+  }
+  2% {
+    transform: rotate(20deg);
+  }
+  4% {
+    transform: rotate(-20deg);
+  }
+  6% {
+    transform: rotate(20deg);
+  }
+  8% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

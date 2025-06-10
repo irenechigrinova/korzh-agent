@@ -1,0 +1,59 @@
+.conveyor {
+  height: 350px;
+  position: absolute;
+  top:230px;
+  left: 1000px;
+  width: 0px;
+
+  div {
+    height: 50px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.conveyor .progress-wrapper {
+  transform: translateY(140px);
+}
+
+.conveyor .progress-wrapper .progress-funky {
+  overflow: hidden;
+  clip-path: polygon(100px 0, 100% 0, 94% 100%, 10px 100%);
+  transform: translateX(30px);
+  z-index: -20;
+  border-radius: 200px;
+}
+
+.conveyor .progress-wrapper .progress-funky .current {
+  width: 5000px;
+  z-index: -20;
+  overflow: hidden;
+  animation: width 1.5s infinite linear forwards;
+  transition: 0.3s;
+  background: repeating-linear-gradient(
+                  -30deg,
+                  #c4c4c4,
+                  #c4c4c4 10px,
+                  #c4c4c4 50px,
+                  #bababa 100px,
+                  #c4c4c4 20px
+  );
+}
+
+.conveyor .wrapper .belt {
+  width: 100vw;
+}
+
+.conveyor .wrapper .belt rect {
+  width: 100vw;
+  height: 100px;
+}
+
+@keyframes width {
+  0% {
+    width: 5000px;
+  }
+  100% {
+    width: 4800px;
+  }
+}

@@ -1,0 +1,261 @@
+:root {
+  --box-light: #f1b074;
+  --box-mid: #a67549;
+  --box-inner-mid: #9a673e;
+  --box-dark: #8f5f37;
+  --box-inner-dark: #7c4b26;
+  --box-inner-darkest: #6b3e1c;
+}
+
+.box-wrapper {
+  --size: 500px;
+  width: var(--size);
+  height: var(--size);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  perspective: 500px;
+  cursor: pointer;
+  animation: bounce-in-top 1.1s both;
+  animation-delay: 1s;
+  position: relative;
+  margin: auto;
+  z-index: 2;
+
+  .korzh-box {
+    opacity: 0;
+  }
+
+  .text {
+    font-size: 50px;
+    padding-top: 40px;
+  }
+
+  .box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(-20rem) rotatex(-15deg) rotatey(45deg);
+    font-size: 2.5rem;
+    text-align: center;
+    transition: 0.75s;
+    > * {
+      position: absolute;
+      background: #0008;
+      transition: 0.5s;
+    }
+    .side {
+      &.front,
+      &.left,
+      &.back,
+      &.right {
+        width: var(--size);
+        height: calc(var(--size) * 0.75);
+        transform:
+                translateY(calc(var(--size) * 0.25))
+                rotateY(var(--angle, 0deg))
+                translateZ(calc(var(--size) * 0.499));
+      }
+      &.front {
+        background: var(--box-mid);
+      }
+      &.right {
+        --angle: 90deg;
+        background: var(--box-inner-mid);
+      }
+      &.back {
+        --angle: 180deg;
+        background: var(--box-inner-dark);
+      }
+      &.left {
+        --angle: -90deg;
+        background: var(--box-dark);
+      }
+      &.bottom {
+        width: var(--size);
+        height: var(--size);
+        transform:
+                translateY(calc(var(--size) * 0.25))
+                rotateX(90deg)
+                translateZ(calc(var(--size) * -0.249));
+        background: var(--box-inner-darkest);
+      }
+    }
+    .flap {
+      background: var(--box-light);
+      &.front,
+      &.back {
+        width: var(--size);
+        height: calc(var(--size) * 0.5);
+      }
+      &.left,
+      &.right {
+        width: calc(var(--size) * 0.5);
+        height: var(--size);
+      }
+      &.front {
+        transform-origin: 50% 100% calc(var(--size) * 0.5);
+        //These transform-origins were a pain to find, front and back I found to be easier because they didn't require an aditional rotation to account for
+        transform:
+                translateY(calc(var(--size) * -0.25))
+                rotateX(90deg)
+                translateZ(calc(var(--size) * 0.499));
+      }
+      &.back {
+        transform-origin: 50% 100% calc(var(--size) * -0.5);
+        transform:
+                translateY(calc(var(--size) * -0.25))
+                rotateX(-90deg)
+                translateZ(calc(var(--size) * -0.499));
+      }
+      &.left {
+        transform-origin: 0 50% 0;
+        transform:
+                translateY(calc(var(--size) * -0.25))
+                rotateX(90deg)
+                rotateY(0deg);
+      }
+      &.right {
+        transform-origin: 0 50% 0;
+        transform:
+                translateX(var(--size))
+                  //This is a duplication of left but translated over and reversed because the transform-origin didn't play nicely with this configuration
+                  //hence the same transform-origin. I would love to see how someone else would have solved this but I spent too long trying to get a nicer solution.
+                translateY(calc(var(--size) * -0.25))
+                rotateX(90deg)
+                rotateY(180deg);
+      }
+    }
+  }
+  $transitiondelay: 0.2s; //CSS variable here is pointless as the animation is baked, it's just the value appears multiple times
+  &:not(.active) {
+    .box {
+      .flap {
+        &.left,
+        &.right {
+          transition-delay: $transitiondelay;
+        }
+      }
+    }
+  }
+  &.active {
+    .box {
+      transform: translateZ(-30rem) rotatex(-40deg) rotatey(15deg);
+      .flap {
+        //The only difference is that the main axis of rotation is 210degrees outwards (the value that isn't a multiple of 90 is the one that was changed)
+        background: var(--box-inner-mid);
+        &.front,
+        &.back {
+          transition-delay: $transitiondelay;
+        }
+        &.front {
+          transform:
+                  translateY(calc(var(--size) * -0.25))
+                  rotateX(-120deg) //< changed
+                  translateZ(calc(var(--size) * 0.499));
+        }
+        &.back {
+          transform:
+                  translateY(calc(var(--size) * -0.25))
+                  rotateX(120deg) //< changed
+                  translateZ(calc(var(--size) * -0.499));
+        }
+        &.left {
+          transform:
+                  translateY(calc(var(--size) * -0.25))
+                  rotateX(90deg)
+                  rotateY(-210deg); //< changed
+        }
+        &.right {
+          transform:
+                  translateX(var(--size))
+                  translateY(calc(var(--size) * -0.25))
+                  rotateX(90deg)
+                  rotateY(380deg); //< changed
+        }
+      }
+    }
+    .korzh-box {
+      transition: 800ms;
+    }
+  }
+  &.hidden {
+    .box-element {
+      animation: animate-top 800ms forwards;
+    }
+    .korzh-box {
+      transform: translate(-400px, -0px) rotate(18deg) scale(0.6);
+    }
+  }
+}
+
+@keyframes animate-top {
+  from { top: 0; opacity: 1; }
+  to { top: 1500px; opacity: 0; }
+}
+
+@keyframes bounce-in-top {
+  0% {
+    -webkit-transform: translateY(-500px);
+    transform: translateY(-500px);
+    -webkit-animation-timing-function: ease-in;
+    animation-timing-function: ease-in;
+    opacity: 0;
+  }
+  38% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+    opacity: 1;
+  }
+  55% {
+    -webkit-transform: translateY(-65px);
+    transform: translateY(-65px);
+    -webkit-animation-timing-function: ease-in;
+    animation-timing-function: ease-in;
+  }
+  72% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+  }
+  81% {
+    -webkit-transform: translateY(-28px);
+    transform: translateY(-28px);
+    -webkit-animation-timing-function: ease-in;
+    animation-timing-function: ease-in;
+  }
+  90% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+  }
+  95% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px);
+    -webkit-animation-timing-function: ease-in;
+    animation-timing-function: ease-in;
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-animation-timing-function: ease-out;
+    animation-timing-function: ease-out;
+  }
+}
+
+.korzh-box {
+  background-image: url('korzh-box.png') !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  background-color: transparent !important;
+  width: var(--size);
+  height: var(--size);
+  position: absolute;
+  top: 450px;
+  left: 0px;
+  z-index: 2;
+}

@@ -1,0 +1,113 @@
+.form {
+  padding: 32px;
+  position: absolute;
+  z-index: 2;
+  color: #000;
+
+  p {
+    font-size: 30px;
+  }
+}
+
+.checkbox {
+  margin-top: 48px;
+  font-size: 25px;
+  margin-left: -16px;
+
+  label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+
+    &:after{
+      content: '';
+      position: absolute;
+      width: 0px;
+      height: 5px;
+      left: 50%;
+      bottom: -8px;
+      background-color: red;
+      transition: all ease-in-out .2s;
+    }
+  }
+
+  label.error:after {
+    width: 56%;
+    left: 63px;
+  }
+
+  label.ok:after {
+    background-color: green;
+  }
+
+  input {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+
+  input:not(:checked) ~ .wrapper svg {
+    opacity: 0;
+  }
+
+  input:checked ~ .wrapper svg {
+    opacity: 1;
+  }
+
+  .wrapper {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #000;
+    position: relative;
+  }
+
+  svg {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    top: 2px;
+    left: 2px;
+    transition: opacity 0.4s;
+
+    path {
+      fill: #f82587;
+    }
+  }
+}
+
+.go {
+  margin-top: 48px;
+  background-color: #f82587;
+  outline: none;
+  border: none;
+  padding: 24px;
+  cursor: pointer;
+  font-size: 30px;
+  color: #ffffff;
+  border-radius: 8px;
+  width: 200px;
+  transition: transform 400ms;
+}
+
+.paused {
+  animation-play-state: paused;
+}
+
+.form-hidden {
+  animation: swirl-out-bck 0.6s ease-in both !important;
+}
+
+@keyframes swirl-out-bck {
+  0% {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-540deg) scale(0);
+    opacity: 0;
+  }
+}
+
