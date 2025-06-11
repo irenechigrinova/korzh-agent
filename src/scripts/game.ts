@@ -101,7 +101,7 @@ export default (state: Record<string, any>) => {
         cves.forEach((cve) => {
           const left = cve.getBoundingClientRect().left;
           const diff = batPosition - left;
-          if (diff < -60 && diff > -100) {
+          if (diff < -40 && diff > -100) {
             const rand = makeRandomInt(1, 2);
             (document.querySelector(`#bonk-${rand}`) as HTMLAudioElement)?.play();
 
@@ -126,8 +126,10 @@ export default (state: Record<string, any>) => {
       gameTL.to(".bat-wrapper img", {
         transform: "rotate(15deg)",
         duration: 0.2,
+        onComplete: () => {
+          isBonking = false;
+        }
       });
-      isBonking = false;
     }, 300);
   };
 

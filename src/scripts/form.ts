@@ -99,7 +99,10 @@ export default (state: Record<string, any>) => {
       });
 
       document.querySelector(".go")!.addEventListener("click", () => {
-        state.screen = "box";
+        if ((document.querySelector("#agree") as HTMLInputElement)
+            .checked) {
+          state.screen = "box";
+        }
       });
     },
   });
