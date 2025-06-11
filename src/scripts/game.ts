@@ -65,8 +65,21 @@ export default (state: Record<string, any>) => {
         (mutation.target as HTMLElement).tagName === "BODY" &&
         !(mutation.target as HTMLBodyElement).classList.contains("pause-all")
       ) {
+        let id = window.setTimeout(function() {}, 0);
+
+        while (id--) {
+          window.clearTimeout(id);
+        }
         document.querySelectorAll(".stage").forEach((item) => item.remove());
-        manageCve();
+        document.querySelector(".bat-wrapper")?.classList.remove("active");
+        gameTL.to(".bat-wrapper img", {
+          transform: "rotate(15deg)",
+          duration: 0.2,
+          onComplete: () => {
+            isBonking = false;
+          }
+        });
+        manageCve()
       }
     });
   });
