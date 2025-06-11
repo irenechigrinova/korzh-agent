@@ -68,7 +68,7 @@ const state = new Proxy(initialState, {
         obj.level = newLevel;
         updateLevel(newLevel)
       }
-      if (value === 100) {
+      if (value === 30) {
         pause();
       }
     }
