@@ -420,3 +420,27 @@
     opacity: 0;
   }
 }
+
+.wasted {
+  position: absolute;
+  font-size: 24px;
+  color: black;
+  padding: 2px 12px;
+  border: 4px solid red;
+  border-radius: 4px;
+  transform: translate(20px, -77px) rotate(-24deg);
+  background: rgba(202, 36, 0, 1);
+  animation: slide-in-bck-bottom 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+@keyframes slide-in-bck-bottom {
+  0% {
+    transform: translateZ(700px) translateY(300px) translateX(20px) rotate(-24deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateZ(0) translateY(-77px) translateX(20px) rotate(-24deg);
+    opacity: 1;
+  }
+}
+

@@ -3,9 +3,14 @@
   position: absolute;
   z-index: 2;
   color: #000;
+  top: 60px;
 
   p {
     font-size: 30px;
+  }
+
+  ul {
+    font-size: 24px;
   }
 }
 
@@ -79,7 +84,6 @@
 }
 
 .go {
-  margin-top: 48px;
   background-color: #f82587;
   outline: none;
   border: none;
@@ -90,6 +94,8 @@
   border-radius: 8px;
   width: 200px;
   transition: transform 400ms;
+  position: relative;
+  top: -60px;
 }
 
 .paused {

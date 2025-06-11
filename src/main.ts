@@ -16,6 +16,7 @@ import box from "./scripts/box.ts";
 import updateScore from "./scripts/score.ts";
 import notSupported from "./scripts/notSupported.ts";
 import fail from "./scripts/fail.ts";
+import murphy from "./scripts/murphy.ts";
 
 const plugins = [TextPlugin, EasePack, CSSPlugin, CustomEase, Observer];
 gsap.registerPlugin(...plugins);
@@ -35,6 +36,13 @@ const state = new Proxy(initialState, {
       game(state);
     }
     if (prop === "screen" && value === "box") {
+      (document.querySelector('#main-theme') as HTMLAudioElement).volume = 0.5;
+      document.querySelectorAll(".audio-el").forEach((item) => {
+        (item as HTMLAudioElement).volume = 1;
+      });
+
+
+      (document.querySelector('#main-theme') as HTMLAudioElement).play();
       box(state);
     }
     if (prop === "screen" && value === "fail") {
@@ -42,6 +50,12 @@ const state = new Proxy(initialState, {
     }
     if (prop === "score") {
       updateScore(value);
+      if (obj.score > value) {
+        murphy();
+      }
+      if (value < 0) {
+        fail(state)
+      }
     }
     return Reflect.set(obj, prop, value);
   },

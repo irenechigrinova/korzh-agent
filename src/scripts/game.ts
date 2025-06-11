@@ -23,7 +23,8 @@ const content = `
             <div class='current'></div>
         </div>
     </div>
-</div>
+  </div>
+  <img src="murphy.gif" alt="cillian murphy" class="murphy" />
 `;
 
 export default (state: Record<string, any>) => {
@@ -77,24 +78,35 @@ export default (state: Record<string, any>) => {
 
   const handleBonk = (e?: MouseEvent | KeyboardEvent) => {
     if (isBonking) return;
-    if (document.body.classList.contains("pause-all")) return;
+    if (document.body.classList.contains("pause-all")) {
+      state.score = 0;
+      document.querySelector('.dark')?.remove();
+      document.body.classList.remove("pause-all");
+    };
 
     isBonking = true;
 
     gameTL.to(".bat-wrapper img", {
       transform: "rotate(45deg)",
       duration: 0.2,
-      onComplete: () => {
+      onStart: () => {
         if (!e) {
           document.querySelector(".bat-wrapper")?.classList.add("active");
+          const rand = makeRandomInt(1, 2);
+          (document.querySelector(`#bonk-${rand}`) as HTMLAudioElement)?.play();
         }
+
         const cves = document.querySelectorAll(".stage");
         const batPosition = document.querySelector('.bat-wrapper')?.getBoundingClientRect().left ?? 0;
         cves.forEach((cve) => {
           const left = cve.getBoundingClientRect().left;
           const diff = batPosition - left;
-          if (diff < 0 && diff > -70) {
+          if (diff < -60 && diff > -100) {
+            const rand = makeRandomInt(1, 2);
+            (document.querySelector(`#bonk-${rand}`) as HTMLAudioElement)?.play();
+
             document.querySelector(".bat-wrapper")?.classList.add("active");
+
             if (
               !cve.classList.contains("accepted") &&
               state.cves.includes(cve.className.split(" ")[1])
@@ -146,6 +158,6 @@ export default (state: Record<string, any>) => {
     });
   }, 1100);
 
-  document.addEventListener("click", handleBonk);
+  document.addEventListener("mousedown", handleBonk);
   document.addEventListener("keydown", handleBonk);
 };

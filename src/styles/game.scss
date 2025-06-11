@@ -13,6 +13,12 @@
   }
 }
 
+.murphy {
+  width: 200px;
+  transition: opacity 300ms;
+  opacity: 0;
+}
+
 .character {
   position: relative;
 }
@@ -142,6 +148,8 @@
   font-size: 24px;
   justify-content: flex-end;
   transform: scale(0.8);
+  position: relative;
+  top: -60px;
 
   div:nth-child(2) {
     padding-left: 24px;

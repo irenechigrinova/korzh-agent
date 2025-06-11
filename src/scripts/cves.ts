@@ -65,19 +65,47 @@ export default (state: Record<string, any>) => {
 
   setTimeout(() => {
     if (!document.body.classList.contains("pause-all")) {
-      stage.remove();
+      const rand = makeRandomInt(1, 2);
+      (document.querySelector(`#entrance-${rand}`) as HTMLAudioElement)?.play();
     }
-  }, 8300);
-  setTimeout(() => {
-    if (isAccepted && !document.body.classList.contains("pause-all"))
-      stage.classList.add("active");
-  }, 6200);
+  }, 500)
+
   if (isAccepted) {
     const randInterval = makeRandomInt(1000, 5000);
     setTimeout(() => {
       if (!document.body.classList.contains("pause-all")) {
         stage.classList.add("active-accepted");
+
+        const rand = makeRandomInt(1, 4);
+        (document.querySelector(`#sign-${rand}`) as HTMLAudioElement)?.play();
       }
     }, randInterval);
   }
+
+  setTimeout(() => {
+    if (!document.body.classList.contains("pause-all")) {
+      if (isAccepted) {
+        stage.classList.add("active");
+
+        const rand = makeRandomInt(1, 2);
+        if (rand === 2) {
+          (document.querySelector(`#fuck-${rand}`) as HTMLAudioElement)?.play();
+        }
+      }
+      else {
+        if (state.cves.includes(level) && !stage.classList.contains("bonked")) {
+          stage.innerHTML += '<div class="wasted">Проёбано</div>'
+          setTimeout(() => {
+            state.score -= 1;
+          }, 400)
+        }
+      }
+    }
+  }, 6200);
+
+  setTimeout(() => {
+    if (!document.body.classList.contains("pause-all")) {
+      stage.remove();
+    }
+  }, 8300);
 };
