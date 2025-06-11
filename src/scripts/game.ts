@@ -116,10 +116,12 @@ export default (state: Record<string, any>) => {
     };
 
     isBonking = true;
+    // @ts-ignore
+    const timer = TIMER[state.level];
 
     gameTL.to(".bat-wrapper img", {
       transform: "rotate(45deg)",
-      duration: TIMER[state.level].bat,
+      duration: timer.bat,
       onStart: () => {
         if (!e) {
           document.querySelector(".bat-wrapper")?.classList.add("active");
@@ -159,12 +161,12 @@ export default (state: Record<string, any>) => {
       document.querySelector(".bat-wrapper")?.classList.remove("active");
       gameTL.to(".bat-wrapper img", {
         transform: "rotate(15deg)",
-        duration: TIMER[state.level].bat,
+        duration: timer.bat,
         onComplete: () => {
           isBonking = false;
         }
       });
-    }, TIMER[state.level].batUp);
+    }, timer.batUp);
   };
 
   setTimeout(() => {

@@ -101,6 +101,8 @@ export default (state: Record<string, any>) => {
   }
 
   if (state.level !== 'max') {
+    // @ts-ignore
+    const timeout = TIMER[state.level]
     setTimeout(() => {
       if (!document.body.classList.contains("pause-all")) {
         if (isAccepted) {
@@ -120,7 +122,7 @@ export default (state: Record<string, any>) => {
           }
         }
       }
-    }, TIMER[state.level].fuck);
+    }, timeout.fuck);
   }
 
   setTimeout(() => {
