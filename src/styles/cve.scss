@@ -49,6 +49,19 @@
       display: none;
     }
   }
+
+  &.min-level {
+    animation-duration: 1s, 6.2s;
+    animation-delay: 1s, 2s;
+  }
+  &.mid-level {
+    animation-delay: 1s, 1.8s;
+    animation-duration: 0.8s, 4.7s;
+  }
+  &.max-level {
+    animation-delay: 1s, 1.5s;
+    animation-duration: 0.5s, 2.2s;
+  }
 }
 
 .stage.critical .cve {

@@ -17,6 +17,8 @@ import updateScore from "./scripts/score.ts";
 import notSupported from "./scripts/notSupported.ts";
 import fail from "./scripts/fail.ts";
 import murphy from "./scripts/murphy.ts";
+import updateLevel from './scripts/gameLevel.ts'
+import pause from './scripts/pause.ts'
 
 const plugins = [TextPlugin, EasePack, CSSPlugin, CustomEase, Observer];
 gsap.registerPlugin(...plugins);
@@ -25,6 +27,7 @@ const initialState: Record<string, any> = {
   screen: "start",
   cves: [],
   score: 0,
+  level: 'min'
 };
 
 const state = new Proxy(initialState, {
@@ -55,6 +58,18 @@ const state = new Proxy(initialState, {
       }
       if (value < 0) {
         fail(state)
+      }
+
+      let newLevel = obj.level;
+      if (value > 20 && obj.level === 'mid') newLevel = 'max';
+      if (value <= 20 && value >= 10 && obj.level === 'min') newLevel = 'mid';
+
+      if (newLevel !== obj.level) {
+        obj.level = newLevel;
+        updateLevel(newLevel)
+      }
+      if (value === 100) {
+        pause();
       }
     }
     return Reflect.set(obj, prop, value);

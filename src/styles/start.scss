@@ -15,7 +15,7 @@
   animation-delay: 0s, 2s;
 }
 
-.start span {
+.start span.transform {
   display: block;
   z-index: 1;
   width: 100%;
@@ -27,7 +27,7 @@
   animation: shadow-dance 2s infinite;
 }
 
-.start:not(.paused) span {
+.start:not(.paused) span.transform {
   cursor: pointer;
 }
 

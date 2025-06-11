@@ -23,6 +23,23 @@ const accepted = `
   <img src="sign.png" alt="" class="sign" />
 `;
 
+const TIMER = {
+  min: {
+    signMin: 1000,
+    signMax: 5000,
+    fuck: 6200,
+  },
+  mid: {
+    signMin: 700,
+    signMax: 2000,
+    fuck: 4700
+  },
+  max: {
+    signMin: 500,
+    signMax: 1500,
+  }
+}
+
 const makeEyes = () => {
   const rand = makeRandomInt(1, 3);
   switch (rand) {
@@ -53,7 +70,7 @@ export default (state: Record<string, any>) => {
   const level = makeLevel(Object.keys(LEVELS));
   const isAccepted = level !== "ok" && state.cves.includes(level) ? checkAccepted() : false;
 
-  stage.className = `stage ${level} ${isAccepted ? "accepted fuck" : ""}`;
+  stage.className = `stage ${level} ${state.level}-level ${isAccepted ? "accepted fuck" : ""}`;
   stage.innerHTML = `
     <figure class="cve"></figure>
     <div class="shadow"></div>
@@ -64,14 +81,15 @@ export default (state: Record<string, any>) => {
   document.querySelector(".game")?.appendChild(stage);
 
   setTimeout(() => {
-    if (!document.body.classList.contains("pause-all")) {
+    if (!document.body.classList.contains("pause-all") && state.level !== 'max') {
       const rand = makeRandomInt(1, 2);
       (document.querySelector(`#entrance-${rand}`) as HTMLAudioElement)?.play();
     }
   }, 500)
 
   if (isAccepted) {
-    const randInterval = makeRandomInt(1000, 5000);
+    // @ts-ignore
+    const randInterval = makeRandomInt(TIMER[state.level].signMin, TIMER[state.level].signMax);
     setTimeout(() => {
       if (!document.body.classList.contains("pause-all")) {
         stage.classList.add("active-accepted");
@@ -82,30 +100,32 @@ export default (state: Record<string, any>) => {
     }, randInterval);
   }
 
-  setTimeout(() => {
-    if (!document.body.classList.contains("pause-all")) {
-      if (isAccepted) {
-        stage.classList.add("active");
+  if (state.level !== 'max') {
+    setTimeout(() => {
+      if (!document.body.classList.contains("pause-all")) {
+        if (isAccepted) {
+          stage.classList.add("active");
 
-        const rand = makeRandomInt(1, 2);
-        if (rand === 2) {
-          (document.querySelector(`#fuck-${rand}`) as HTMLAudioElement)?.play();
+          const rand = makeRandomInt(1, 2);
+          if (rand === 2) {
+            (document.querySelector(`#fuck-${rand}`) as HTMLAudioElement)?.play();
+          }
+        }
+        else {
+          if (state.cves.includes(level) && !stage.classList.contains("bonked")) {
+            stage.innerHTML += '<div class="wasted">Проёбано</div>'
+            setTimeout(() => {
+              state.score -= 1;
+            }, state.level === 'min' ? 400 : 200)
+          }
         }
       }
-      else {
-        if (state.cves.includes(level) && !stage.classList.contains("bonked")) {
-          stage.innerHTML += '<div class="wasted">Проёбано</div>'
-          setTimeout(() => {
-            state.score -= 1;
-          }, 400)
-        }
-      }
-    }
-  }, 6200);
+    }, TIMER[state.level].fuck);
+  }
 
   setTimeout(() => {
     if (!document.body.classList.contains("pause-all")) {
       stage.remove();
     }
-  }, 8300);
+  }, state.level === 'min'  ? 8300 : 6000);
 };

@@ -3,6 +3,27 @@ import { makeRandomInt, renderLevel } from "./utils.ts";
 
 import makeCve from "./cves.ts";
 
+const TIMER = {
+  min: {
+    min: 1000,
+    max: 3000,
+    bat: 0.2,
+    batUp: 300,
+  },
+  mid: {
+    min: 500,
+    max: 2500,
+    bat: 0.1,
+    batUp: 200,
+  },
+  max: {
+    min: 200,
+    max: 1000,
+    bat: 0.08,
+    batUp: 100,
+  }
+}
+
 const content = `
   <div class="character">
     <div class="korzh"></div>
@@ -25,6 +46,7 @@ const content = `
     </div>
   </div>
   <img src="murphy.gif" alt="cillian murphy" class="murphy" />
+  <div class="alert">Увеличиваем скорость</div>
 `;
 
 export default (state: Record<string, any>) => {
@@ -53,7 +75,8 @@ export default (state: Record<string, any>) => {
   const manageCve = () => {
     makeCve(state);
 
-    const rand = makeRandomInt(1000, 3000);
+    // @ts-ignore
+    const rand = makeRandomInt(TIMER[state.level].min, TIMER[state.level].max);
     if (!document.body.classList.contains("pause-all")) {
       setTimeout(manageCve, rand);
     }
@@ -65,11 +88,6 @@ export default (state: Record<string, any>) => {
         (mutation.target as HTMLElement).tagName === "BODY" &&
         !(mutation.target as HTMLBodyElement).classList.contains("pause-all")
       ) {
-        let id = window.setTimeout(function() {}, 0);
-
-        while (id--) {
-          window.clearTimeout(id);
-        }
         document.querySelectorAll(".stage").forEach((item) => item.remove());
         document.querySelector(".bat-wrapper")?.classList.remove("active");
         gameTL.to(".bat-wrapper img", {
@@ -101,7 +119,7 @@ export default (state: Record<string, any>) => {
 
     gameTL.to(".bat-wrapper img", {
       transform: "rotate(45deg)",
-      duration: 0.2,
+      duration: TIMER[state.level].bat,
       onStart: () => {
         if (!e) {
           document.querySelector(".bat-wrapper")?.classList.add("active");
@@ -111,7 +129,9 @@ export default (state: Record<string, any>) => {
 
         const cves = document.querySelectorAll(".stage");
         const batPosition = document.querySelector('.bat-wrapper')?.getBoundingClientRect().left ?? 0;
-        cves.forEach((cve) => {
+
+        for (let i = 0; i < cves.length; i++) {
+          const cve = cves[i];
           const left = cve.getBoundingClientRect().left;
           const diff = batPosition - left;
           if (diff < -40 && diff > -100) {
@@ -121,16 +141,17 @@ export default (state: Record<string, any>) => {
             document.querySelector(".bat-wrapper")?.classList.add("active");
 
             if (
-              !cve.classList.contains("accepted") &&
-              state.cves.includes(cve.className.split(" ")[1])
+                !cve.classList.contains("accepted") &&
+                state.cves.includes(cve.className.split(" ")[1])
             ) {
               cve.classList.add("bonked");
               state.score += 1;
             } else {
               state.screen = "fail";
             }
+            break;
           }
-        });
+        }
       },
     });
 
@@ -138,12 +159,12 @@ export default (state: Record<string, any>) => {
       document.querySelector(".bat-wrapper")?.classList.remove("active");
       gameTL.to(".bat-wrapper img", {
         transform: "rotate(15deg)",
-        duration: 0.2,
+        duration: TIMER[state.level].bat,
         onComplete: () => {
           isBonking = false;
         }
       });
-    }, 300);
+    }, TIMER[state.level].batUp);
   };
 
   setTimeout(() => {

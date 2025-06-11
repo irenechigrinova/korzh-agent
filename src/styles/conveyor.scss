@@ -40,6 +40,18 @@
   );
 }
 
+.conveyor.min-level .progress-wrapper .progress-funky .current {
+  animation-duration: 1.5s;
+}
+
+.conveyor.mid-level .progress-wrapper .progress-funky .current {
+  animation-duration: 1s;
+}
+
+.conveyor.max-level .progress-wrapper .progress-funky .current {
+  animation-duration: 0.5s;
+}
+
 .conveyor .wrapper .belt {
   width: 100vw;
 }

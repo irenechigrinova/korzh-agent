@@ -11,6 +11,12 @@ export default (state: Record<string, any>) => {
   dark.classList.add("dark");
   document.body.appendChild(dark);
 
+  let id = window.setTimeout(function() {}, 0);
+
+  while (id--) {
+    window.clearTimeout(id);
+  }
+
   setTimeout(() => {
     dark.innerHTML = `
       <img src="fail.png" alt="fail" />
@@ -20,6 +26,7 @@ export default (state: Record<string, any>) => {
 
     document.querySelector(".more")?.addEventListener("click", () => {
       state.score = 0;
+      state.level = 'min'
       dark.remove();
       document.body.classList.remove("pause-all");
     });
