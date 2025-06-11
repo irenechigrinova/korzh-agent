@@ -127,3 +127,19 @@ section {
     opacity: 1;
   }
 }
+
+.powered {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+  display: flex;
+  white-space: nowrap;
+  width: 200px;
+  font-size: 24px;
+  align-items: center;
+
+  svg {
+    width: 40px;
+  }
+}
