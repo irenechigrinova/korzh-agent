@@ -31,12 +31,12 @@ const TIMER = {
   },
   mid: {
     signMin: 700,
-    signMax: 2000,
+    signMax: 3000,
     fuck: 4700
   },
   max: {
     signMin: 500,
-    signMax: 1500,
+    signMax: 1900,
   }
 }
 
@@ -60,7 +60,7 @@ const makeLevel = (levels: string[]) => {
 };
 
 const checkAccepted = () => {
-  const arr = [0, 0, 1];
+  const arr = [0, 0, 0, 1, 1];
   const rand = makeRandomInt(0, arr.length - 1);
   return Boolean(arr[rand]);
 };

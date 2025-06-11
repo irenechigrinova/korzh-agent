@@ -62,7 +62,7 @@ const state = new Proxy(initialState, {
 
       let newLevel = obj.level;
       if (value > 20 && obj.level === 'mid') newLevel = 'max';
-      if (value <= 20 && value >= 10 && obj.level === 'min') newLevel = 'mid';
+      if (value > 5 && obj.level === 'min') newLevel = 'mid';
 
       if (newLevel !== obj.level) {
         obj.level = newLevel;
